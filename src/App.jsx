@@ -3,9 +3,19 @@ import "./App.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
+import "swiper/css/autoplay";
+import {
+  MDBFooter,
+  MDBContainer,
+  // MDBCol,
+  // MDBRow,
+  MDBIcon,
+} from "mdb-react-ui-kit";
 
-import { Navigation } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
 import { useState } from "react";
+import InputMask from "react-input-mask";
+import Fade from "react-reveal/Fade";
 import {
   Accordion,
   AccordionButton,
@@ -14,6 +24,9 @@ import {
   AccordionPanel,
   Box,
   ChakraProvider,
+  Image,
+  Input,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -24,17 +37,21 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+
 function App() {
   const [data, setData] = useState({});
   const [modal, setModal] = useState(false);
+  const [obj, setObj] = useState({ number: "" });
+  const [err, setErr] = useState({});
   const toast = useToast();
+
   const product = [
     {
       name: "JANOME 1522BL",
       price: "2 875 000",
       id: "",
-      hot: false,
-      action: false,
+      hot: true,
+      action: true,
       actionNumber: 5,
       img: "/img/1522%20b1.jpg",
     },
@@ -97,30 +114,30 @@ function App() {
     {
       name: "lorem",
       id: 1,
-      icon: "/img/1815.jpg",
-      title: "lorem lorem",
-      desc: " lorem inpsum nimaladir nimaladir",
+      icon: "/img/gift.png",
+      title: "Ajoyib sovg'alar",
+      desc: "Janome xarid qilish orqali ajoyib sovg'alarga ega bo'ling",
     },
     {
       name: "lorem",
       id: 2,
-      icon: "/img/1815.jpg",
-      title: "lorem lorem",
+      icon: "/img/guaranty.png",
+      title: "Kafolat",
       desc: " lorem inpsum nimaladir nimaladir",
     },
     {
       name: "lorem",
       id: 3,
-      icon: "/img/1815.jpg",
-      title: "lorem lorem",
-      desc: " lorem inpsum nimaladir nimaladir",
+      icon: "/img/star.png",
+      title: "Sifat ustunligi",
+      desc: " lorem inpsum nimaladir nimaladir asdasd",
     },
     {
       name: "lorem",
       id: 4,
-      icon: "/img/1815.jpg",
-      title: "lorem lorem",
-      desc: " lorem inpsum nimaladir nimaladir",
+      icon: "/img/delivery-truck.png",
+      title: "Yetkazib berish",
+      desc: "O'zbekiston bo'ylab yetkazib berish.",
     },
   ];
   const handleModal = (item) => {
@@ -132,26 +149,68 @@ function App() {
   };
 
   const Send = () => {
-    axios
-      .post(
-        encodeURI(
-          `https://api.telegram.org/bot2074530009:AAEtVY4ewFs5p87HW5MMX3wb-d6xdUkyKZU/sendMessage?chat_id=${-1001789196770}&text=<b>👤Nomi:</b><code>${
-            data?.name
-          }</code> \n<b>Narxi:</b><code>${data?.price}</code>\n&parse_mode=html`
-        )
+    let t = true,
+      error = {};
+    if (!obj?.name) {
+      error = { ...error, name: true };
+      t = false;
+    }
+    if (!obj?.area) {
+      error = { ...error, area: true };
+      t = false;
+    }
+    if (
+      !(
+        obj?.number
+          .replace(/-/g, "")
+          .replace(/\(/g, "")
+          .replace(/\)/g, "")
+          .replace(/\+/g, "")
+          .replace(/\s/g, "")
+          .replace(/_/g, "")?.length >= 12
       )
-      // .then((response) => response.json())
-      .then((res) => {
-        if (res?.status === 200) {
-          setModal(false);
-          toast({
-            title: "So'rovingiz yuborildi",
-            status: "success",
-            duration: 9000,
-            isClosable: true,
-          });
-        }
-      });
+    ) {
+      error = { ...error, number: true };
+      t = false;
+    }
+    if (t) {
+      axios
+        .post(
+          encodeURI(
+            `https://api.telegram.org/bot2074530009:AAEtVY4ewFs5p87HW5MMX3wb-d6xdUkyKZU/sendMessage?chat_id=${-1001789196770}&text=<b>Mahsulot nomi: </b><code>${
+              data?.name
+            }</code> \n<b>Narxi: </b><code>${
+              data?.price
+            }</code> \n<b>Ismi: </b><code>${
+              obj?.name
+            }</code> \n<b>Telefon raqami: </b><code>${
+              obj?.number
+            }</code> \n<b>Hudud: </b><code>${
+              obj?.area
+            }</code>\n&parse_mode=html`
+          )
+        )
+        // .then((response) => response.json())
+        .then((res) => {
+          if (res?.status === 200) {
+            setModal(false);
+            toast({
+              position: "top-right",
+              title: "So'rovingiz yuborildi",
+              status: "success",
+              duration: 1000,
+              isClosable: true,
+            });
+            setObj({ number: "" });
+          }
+        });
+    } else {
+      setErr(error);
+    }
+  };
+  const handleChange = (e) => {
+    setObj({ ...obj, [e.target.name]: e.target.value });
+    setErr({ ...err, [e.target.name]: false });
   };
 
   return (
@@ -159,59 +218,66 @@ function App() {
       <ChakraProvider>
         <div className="container">
           <div className="navbar my-3">
-            <img src="/img/Drile.svg" alt="" />
+            <img
+              style={{ width: 160, height: 42 }}
+              src="/img/JANOME%20Logo.png"
+              alt=""
+            />
             <button className="btn btn-outline-info">submit</button>
           </div>
 
           <Swiper
-            navigation={true}
-            modules={[Navigation]}
+            navigation={false}
+            modules={[Navigation, Autoplay]}
             className="mySwiper"
             loop={true}
+            speed={1300}
+            autoplay={{
+              delay: 4500,
+              pauseOnMouseEnter: true,
+              disableOnInteraction: false,
+            }}
           >
             <SwiperSlide>
               <div className="swiper-slide">
-                <img
-                  src="/img/vecteezy_interior-design-of-a-modern-room-in-3d-illustration_2074065 1.jpg"
-                  alt=""
-                />
-                <p className="slider-text">Get ready for Our stylist chair</p>
+                <img src="/img/slide1.jpg" alt="" />
               </div>
             </SwiperSlide>
             <SwiperSlide>
               <div className="swiper-slide">
-                <img
-                  src="/img/vecteezy_interior-design-of-a-modern-room-in-3d-illustration_2074065 1.jpg"
-                  alt=""
-                />
-                <p className="slider-text">Get ready for Our stylist chair</p>
+                <img src="/img/slide2.jpg" alt="" />
               </div>
             </SwiperSlide>
           </Swiper>
 
-          <h2 className="seller-title">Mahsulotlarimiz</h2>
+          <Fade top>
+            <h2 className="seller-title">Mahsulotlarimiz</h2>
+          </Fade>
+
           <div className="cards">
             {product.map((item, i) => {
               return (
-                <div key={i} className="card">
-                  <div className="card-img">
-                    <img src={item?.img} alt="" />
+                <Fade key={i} bottom delay={i * 50}>
+                  <div className="card">
+                    <div className="card-img">
+                      <img src={item?.img} alt="" />
+                    </div>
+                    <div className="text">
+                      <div className="title">{item?.name}</div>
+                      <div className="price">{item?.price} so'm</div>
+                    </div>
+                    <button
+                      className="btn btn-success"
+                      style={{ cursor: "pointer" }}
+                      type="button"
+                      onClick={() => {
+                        handleModal(item);
+                      }}
+                    >
+                      Sotib olish
+                    </button>
                   </div>
-                  <div className="text">
-                    <div className="title">{item?.name}</div>
-                    <div className="price">{item?.price} so'm</div>
-                  </div>
-                  <button
-                    className="btn btn-success"
-                    style={{ cursor: "pointer" }}
-                    type="button"
-                    onClick={() => {
-                      handleModal(item);
-                    }}
-                  >
-                    Sotib olish
-                  </button>
-                </div>
+                </Fade>
               );
             })}
           </div>
@@ -245,14 +311,10 @@ function App() {
           <div className="delivery">
             <img src="/img/delir.jpg" alt="" />
             <div className="text-delivery">
-              <h2 className="my-4" style={{ fontSize: "40px" }}>
-                Информация о доставке
-              </h2>
-              <p style={{ fontSize: "20px" }} className="my-4">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit
-                iure labore ipsa quisquam facilis neque repellendus aliquid
-                mollitia molestias possimus, natus molestiae laboriosam tempore.
-                Consectetur earum quos repudiandae voluptate nulla?
+              <h2 className="my-4">Yetkazib berish</h2>
+              <p className="my-4">
+                <b>EMU express</b> orqali Toshkent shahar ichida 24 soatda,
+                O'zbekiston bo'ylab 48 soat ichida uyingizga yetkazib beriladi.
               </p>
             </div>
           </div>
@@ -263,11 +325,16 @@ function App() {
                 return (
                   <div className="advantages-item" key={i}>
                     <div className="advantages-item_img">
-                      <img src={item?.icon} alt={item?.name} />
+                      {/*    <img src={item?.icon} alt={item?.name}/>*/}
+                      <Image
+                        borderRadius="full"
+                        boxSize="100px"
+                        src={item?.icon}
+                        alt={item?.name}
+                      />
                     </div>
-                    <div className="advantages-item_title">
-                      {item?.title} {item?.id}
-                    </div>
+
+                    <div className="advantages-item_title">{item?.title}</div>
                     <div className="advantages-item_desc">{item?.desc}</div>
                   </div>
                 );
@@ -277,14 +344,14 @@ function App() {
         </div>
         <div className="questions">
           <div className="container">
-            <h2 style={{ color: "white" }}>Bazi savollar</h2>
+            <h2 style={{ color: "black" }}>Ko'p beriladigan savollar</h2>
             <Accordion allowToggle>
               <AccordionItem>
                 <div className="questions-items">
                   <h3>
                     <AccordionButton>
                       <Box as="span" flex="1" textAlign="left">
-                        Lorem ipsum dolor sit amet.
+                        Buyurtma qanday amalga oshiriladi?
                       </Box>
 
                       <AccordionIcon />
@@ -292,11 +359,12 @@ function App() {
                   </h3>
                   <AccordionPanel pb={4}>
                     <li>
-                      Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                      Obcaecati debitis deserunt dolores non odio fuga. Placeat,
-                      temporibus. Quas, unde odio doloribus est impedit
-                      aspernatur omnis aliquid accusantium, saepe voluptatem
-                      vel?
+                      O'zingizni qiziqtirgan mahsulotni tanlang va sotib olish
+                      tugmasini bosish orqali kontakt ma'lumotlaringizni
+                      qoldiring.
+                    </li>
+                    <li>
+                      Tez fursatda operatorlarimiz siz bilan bog'lanishadi.
                     </li>
                   </AccordionPanel>
                 </div>
@@ -306,7 +374,7 @@ function App() {
                   <h3>
                     <AccordionButton>
                       <Box as="span" flex="1" textAlign="left">
-                        Lorem ipsum dolor sit amet.
+                        To'lov qanday amalga oshiriladi?
                       </Box>
 
                       <AccordionIcon />
@@ -314,12 +382,12 @@ function App() {
                   </h3>
                   <AccordionPanel pb={4}>
                     <li>
-                      Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                      Obcaecati debitis deserunt dolores non odio fuga. Placeat,
-                      temporibus. Quas, unde odio doloribus est impedit
-                      aspernatur omnis aliquid accusantium, saepe voluptatem
-                      vel?
+                      Click, PAYME va boshqa online to'lov tizimlari orqali
                     </li>
+                    <li>
+                      Buyurtmani qabul qilgandan so'ng to'lovni amalga oshirish
+                    </li>
+                    <li>Naqd pul orqali joyida to'lov</li>
                   </AccordionPanel>
                 </div>
               </AccordionItem>{" "}
@@ -328,44 +396,134 @@ function App() {
                   <h3>
                     <AccordionButton>
                       <Box as="span" flex="1" textAlign="left">
-                        Lorem ipsum dolor sit amet.
+                        Bo'lib to'lashga olish mumkunmi?
                       </Box>
 
                       <AccordionIcon />
                     </AccordionButton>
                   </h3>
                   <AccordionPanel pb={4}>
-                    <li>
-                      Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                      Obcaecati debitis deserunt dolores non odio fuga. Placeat,
-                      temporibus. Quas, unde odio doloribus est impedit
-                      aspernatur omnis aliquid accusantium, saepe voluptatem
-                      vel?
-                    </li>
+                    <li>Uzum nasiya orqali</li>
+                    <li>Zoodpay orqali</li>
+                    <li>Mahalla orqali 14 foizlik kredit</li>
                   </AccordionPanel>
                 </div>
               </AccordionItem>
             </Accordion>
           </div>
         </div>
-        <div className="footer">
-          <div className="container">
-            <div className="d-flex justify-content-between">
-              <div className="mb-5">
-                <img src="/img/Drile.svg" alt="" />
-              </div>
-              <div className="socils">
-                <ul className="d-flex">
-                  <li className="list-unstyled">
-                    <span className="fa-brands fa-telegram fa-xl"></span>
-                  </li>
-                  <li className="list-unstyled"></li>
-                  <li className="list-unstyled"></li>
-                </ul>
-              </div>
+        <div className="container">
+          <h1>To'lovlar</h1>
+          <div className="payments">
+            <div className="payments-items">
+              <img src="/img/20041.jpg" alt="" />
+            </div>
+            <div className="payments-items">
+              <img src="/img/20041.jpg" alt="" />
+            </div>
+            <div className="payments-items">
+              <img src="/img/20041.jpg" alt="" />
             </div>
           </div>
         </div>
+        <MDBFooter className="bg-light text-center text-white">
+          <MDBContainer className="p-4 pb-0">
+            <section className="mb-4">
+              <Link
+                className="m-1"
+                style={{
+                  backgroundColor: "#3b5998",
+                  borderRadius: "8px",
+                  padding: "15px",
+                }}
+                to="/"
+                role="button"
+              >
+                <MDBIcon fab icon="facebook-f" />
+              </Link>
+
+              <Link
+                className="m-1"
+                style={{
+                  backgroundColor: "#55acee",
+                  borderRadius: "8px",
+                  padding: "15px",
+                }}
+                to=""
+                role="button"
+              >
+                <MDBIcon fab icon="twitter" />
+              </Link>
+
+              <Link
+                className="m-1"
+                style={{
+                  backgroundColor: "#dd4b39",
+                  borderRadius: "8px",
+                  padding: "15px",
+                }}
+                to="/"
+              >
+                <MDBIcon fab icon="google" />
+              </Link>
+              <Link
+                className="m-1"
+                style={{
+                  backgroundColor: "#ac2bac",
+                  borderRadius: "8px",
+                  padding: "15px",
+                }}
+                to="#!"
+              >
+                <MDBIcon fab icon="instagram" />
+              </Link>
+
+              <Link
+                className="m-1"
+                style={{
+                  backgroundColor: "#0082ca",
+                  borderRadius: "8px",
+                  padding: "15px",
+                }}
+                to="/"
+              >
+                <MDBIcon fab icon="linkedin-in" />
+              </Link>
+
+              <Link
+                className="m-1"
+                style={{
+                  backgroundColor: "#333333",
+                  borderRadius: "8px",
+                  padding: "15px",
+                }}
+                to="/"
+              >
+                <MDBIcon fab icon="github" />
+              </Link>
+            </section>
+            <div>
+              <Link to="tel:+998936645664" style={{ color: "black" }}>
+                +99893 664 56 64
+              </Link>
+            </div>
+            <div>
+              <Link to="tel:+998936645664" style={{ color: "black" }}>
+                +99893 664 56 64
+              </Link>
+            </div>
+          </MDBContainer>
+
+          <div
+            className="text-center p-3"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
+          >
+            © 2020 Copyright:
+            <a className="text-white" href="https://mdbootstrap.com/">
+              MDBootstrap.com
+            </a>
+          </div>
+        </MDBFooter>
         <div
           className="modal fade"
           id="exampleModal"
@@ -412,8 +570,51 @@ function App() {
                 <div className="d-flex justify-content-center">
                   <img src={data.img} alt="" style={{ height: "300px" }} />
                 </div>
+                <div>
+                  <div className="mb-4" style={{ textAlign: "left" }}>
+                    <Input
+                      placeholder="Ismi:"
+                      onChange={handleChange}
+                      name="name"
+                      value={obj?.name}
+                    />
+                    {err?.name === true ? (
+                      <span style={{ color: "red" }}>
+                        {"ismingizni kiriting"}
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="mb-4" style={{ textAlign: "left" }}>
+                    <InputMask
+                      className="form-control"
+                      placeholder="Raqam kiriting:"
+                      formatChars={{ b: "[0-9]" }}
+                      mask="+998 (bb) bbb-bb-bb"
+                      maskChar="_"
+                      name="number"
+                      value={obj?.number}
+                      onChange={handleChange}
+                    />
+                    {err?.number === true ? (
+                      <span style={{ color: "red" }}>{"raqam kiriting"}</span>
+                    ) : null}
+                  </div>
+                  <div className="mb-4" style={{ textAlign: "left" }}>
+                    <Input
+                      placeholder="Hudud"
+                      onChange={handleChange}
+                      name="area"
+                      value={obj?.area}
+                    />
+                    {err?.area === true ? (
+                      <span style={{ color: "red" }}>{"huduni kiriting"}</span>
+                    ) : null}
+                  </div>
+                </div>
                 <div>{data?.name}</div>
                 <div>{data?.price} so'm</div>
+
+                <input type="text" />
                 <button className="btn  btn-success" onClick={Send}>
                   Sotib olish
                 </button>
