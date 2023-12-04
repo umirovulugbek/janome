@@ -12,7 +12,14 @@ import { useState } from "react";
 import InputMask from "react-input-mask";
 import Fade from "react-reveal/Fade";
 import "react-image-gallery/styles/css/image-gallery.css";
-import ImageGallery from "react-image-gallery";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+
+import "swiper/css/pagination";
+
+// import required modules
+import { Pagination } from "swiper/modules";
 import {
   Accordion,
   AccordionButton,
@@ -142,20 +149,6 @@ function App() {
   const onClose = () => {
     setModal(false);
   };
-  const images = [
-    {
-      original: "/img/slide1.jpg",
-      thumbnail: "/img/slide1.jpg",
-    },
-    {
-      original: "/img/slide2.jpg",
-      thumbnail: "/img/slide2.jpg",
-    },
-    {
-      original: "/img/slide1.jpg",
-      thumbnail: "/img/slide1.jpg",
-    },
-  ];
 
   const Send = () => {
     let t = true,
@@ -232,13 +225,48 @@ function App() {
               src="/img/JANOME%20Logo.png"
               alt=""
             />
-            <button className="btn btn-outline-info">
+            {/* <button className="btn btn-outline-info">
               <Link to={"tel:+998910032202"}>+998 91 003 22 02</Link>
+            </button> */}
+            <button className="call-btn">
+              <p>+998 91 003 22 02</p>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="16"
+                width="16"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  fill="#ffffff"
+                  d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"
+                />
+              </svg>
             </button>
           </div>{" "}
         </div>
+        <Swiper
+          slidesPerView={"auto"}
+          centeredSlides={true}
+          spaceBetween={30}
+          loop={true}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Pagination]}
+          className="mySwiper"
+        >
+          <SwiperSlide style={{ width: "80%" }} className={""}>
+            <img src={"/img/slide1.jpg"} />
+          </SwiperSlide>
+
+          <SwiperSlide style={{ width: "80%" }}>
+            <img src={"/img/slide2.jpg"} />
+          </SwiperSlide>
+          <SwiperSlide style={{ width: "80%" }}>
+            <img src={"/img/slide2.jpg"} />
+          </SwiperSlide>
+        </Swiper>
         <div className="container mt-3">
-          <ImageGallery items={images} />
           <Fade top>
             <h2 className="seller-title">Mahsulotlarimiz</h2>
           </Fade>
@@ -290,11 +318,21 @@ function App() {
               <div className="shop-item_texts text-left">
                 <button className="button-deal">Xafta mahsuloti</button>
                 <div className="price">
-                  from
-                  <span className="number">$99.99</span>
+                  <span className="number">99.99 so'm</span>
+                  <div
+                    className="number text-red text-decoration-line-through"
+                    style={{ color: "red" }}
+                  >
+                    99.99 so'm
+                  </div>
                 </div>
-                <button className="shop_now-button">
-                  Hoziroq Xarid qiling
+                <button
+                  className="shop_now-button"
+                  onClick={() => {
+                    handleModal(product[0]);
+                  }}
+                >
+                  <span>Hoziroq Xarid qiling</span>
                 </button>
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -641,8 +679,24 @@ function App() {
                   <div>{data?.name}</div>
                   <div>{data?.price} so'm</div>
 
-                  <button className="btn  btn-success" onClick={Send}>
-                    Sotib olish
+                  <button className="send" onClick={Send}>
+                    <div className="svg-wrapper-1">
+                      <div className="svg-wrapper">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                        >
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                          <path
+                            fill="currentColor"
+                            d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+                          ></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <span>Sotib olish</span>
                   </button>
                 </div>
               </div>
