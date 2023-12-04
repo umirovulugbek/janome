@@ -5,10 +5,15 @@ body {
   font-family: "Federo", sans-serif !important;
   position: relative;
   height: 100%;
+  background-color: #e8e8e8;
 }
-
+* {
+  font-family: "Federo", sans-serif !important;
+}
+.navbar {
+  border-bottom-width: 1px;
+}
 .seller-title {
-  font-family: Roboto;
   font-weight: bold;
 }
 .swiper {
@@ -30,7 +35,7 @@ body {
 
 .swiper-slide p {
   color: #3a3a3a;
-  font-family: Federo;
+  font-family: "Federo";
   font-size: 50px;
   font-style: normal;
   font-weight: 400;
@@ -55,7 +60,7 @@ body {
 
 .swiper-slide {
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
   /* background: #ddd; */
   display: flex;
   /* flex-direction: column;
@@ -84,7 +89,7 @@ body {
 img {
   max-width: 100%;
   height: auto;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .cards {
@@ -106,13 +111,78 @@ h2 {
   text-align: center;
 }
 
-.card {
+/* carddddddddddddddddddd */
+.card_box {
+  /* width: 200px;
+  height: 250px; */
+  border-radius: 20px;
+  /* background: linear-gradient(
+    170deg,
+    rgba(58, 56, 56, 0.623) 0%,
+    rgb(31, 31, 31) 100%
+  ); */
   position: relative;
-  /* width: 255px; */
-  height: 342px;
-  background: #fff;
-  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 25px 50px rgba(0, 0, 0, 0.55);
+   */
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
 }
+
+.card_box:hover {
+  transform: scale(0.9);
+}
+
+.card_box span {
+  position: absolute;
+  overflow: hidden;
+  width: 110px;
+  height: 110px;
+  top: -5px;
+  left: -5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card_box span::before {
+  content: "Aksiya";
+  position: absolute;
+  width: 150%;
+  height: 30px;
+  background-image: linear-gradient(
+    45deg,
+    #ff6547 0%,
+    #ffb144 51%,
+    #ff7053 100%
+  );
+  transform: rotate(-45deg) translateY(-20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.23);
+}
+
+/* .card_box span::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  bottom: 0;
+  left: 0;
+  height: 10px;
+  z-index: -1;
+  box-shadow: 140px -140px #cc3f47;
+  background-image: linear-gradient(
+    45deg,
+    #ff512f 0%,
+    #f09819 51%,
+    #ff512f 100%
+  );
+} */
 
 .card-img img {
   height: 180px;
@@ -120,17 +190,19 @@ h2 {
   background-position: center center;
   background-size: cover;
   padding: 10px;
-  /* width: 100%; */
+  /* width: 70%; */
+  /* height: 100%; */
   /* border-radius: 20px 20px 0px 0px; */
   cursor: pointer;
   transition: all 0.5s ease-in-out 0s;
-  overflow: hidden;
 }
 
 .card-img {
-  height: 100%;
+  /* height: 100%; */
+  margin-top: 20px;
   align-items: center;
   display: flex;
+
   justify-content: center;
 }
 
@@ -232,7 +304,7 @@ button {
   background: #8096bc;
   color: #fff;
   text-align: center;
-  font-family: "Open Sans";
+  /* font-family: "Open Sans"; */
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -298,7 +370,7 @@ button {
   font-weight: 300;
   line-height: 26px; /* 162.5% */
 }
-
+/* footer */
 .footer {
   background-color: #f29731;
   position: relative;
@@ -328,6 +400,82 @@ button {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   /* gap: 30px; */
+}
+
+.card {
+  width: fit-content;
+  height: fit-content;
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 25px;
+  gap: 20px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.055);
+}
+
+/* for all social containers*/
+.socialContainer {
+  width: 52px;
+  height: 52px;
+  background-color: rgb(44, 44, 44);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition-duration: 0.3s;
+}
+/* instagram*/
+.containerOne:hover {
+  background-color: #d62976;
+  transition-duration: 0.3s;
+}
+/* twitter*/
+.containerTwo:hover {
+  background-color: #00acee;
+  transition-duration: 0.3s;
+}
+/* linkdin*/
+.containerThree:hover {
+  background-color: #0072b1;
+  transition-duration: 0.3s;
+}
+/* Whatsapp*/
+.containerFour:hover {
+  background-color: #128c7e;
+  transition-duration: 0.3s;
+}
+
+.socialContainer:active {
+  transform: scale(0.9);
+  transition-duration: 0.3s;
+}
+
+.socialSvg {
+  width: 17px;
+}
+
+.socialSvg path {
+  fill: rgb(255, 255, 255);
+}
+
+.socialContainer:hover .socialSvg {
+  animation: slide-in-top 0.3s both;
+}
+.chakra-modal__body {
+  padding: 0 !important;
+}
+
+@keyframes slide-in-top {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .footer-item {
@@ -365,13 +513,13 @@ button {
   margin-bottom: 50px;
 }
 .delivery .text-delivery h2 {
-  font-family: Roboto;
+  font-family: "Roboto";
   font-size: 40px;
   font-weight: bold;
 }
 
 .delivery .my-4 {
-  font-family: Roboto;
+  font-family: "Roboto";
   font-size: 20px;
   font-weight: normal;
 }
@@ -383,7 +531,7 @@ button {
 .advantages h2 {
   font-size: 47px;
   font-weight: bold;
-  font-family: "Roboto";
+  font-family: "Federo", sans-serif !important;
 }
 
 .advantages-items {
@@ -394,22 +542,27 @@ button {
 
 .advantages-item {
   text-align: center;
+  /* flex-direction: column;
+  justify-content: space-evenly;
+  display: flex; */
 }
 
 .advantages-item_img {
   display: flex;
   justify-content: center;
+  margin-bottom: 10px;
+  height: 130px;
 }
 
 .advantages-item_img img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensure the image covers the entire container */
-  border-radius: 50%; /* Make the image itself circular */
+  object-fit: contain; /* Ensure the image covers the entire container */
+  border-radius: inherit;
 }
 
 .advantages-item_title {
-  font-family: "Roboto Slab";
+  font-family: "Federo", sans-serif !important;
   font-weight: 600;
 }
 
@@ -426,9 +579,26 @@ button {
   color: black;
 }
 
-/* .questions-items {
-  margin-bottom: 50px;
-} */
+.questions-items {
+  margin: 20px 0px;
+  border-radius: 19px;
+  background: #f5faff;
+  box-shadow: 0px 0px 20px 0px rgba(86, 86, 86, 0.2);
+  transition: all 0.5s ease;
+}
+.questions-items h3 button {
+  margin: 0 !important;
+}
+.questions-items h3 button:hover {
+  background: #f5faff;
+  border-radius: 19px;
+}
+.css-17mg6aq:last-of-type {
+  border-bottom-width: 0px !important;
+}
+.css-17mg6aq {
+  border-top-width: 0px !important;
+}
 .questions .container {
   padding: 70px 0;
 }
@@ -450,7 +620,11 @@ button {
   justify-content: center;
   align-items: center;
   border-radius: 30px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  border-radius: 30px;
+  /* background: #e0e0e0; */
+  height: 250px;
+  box-shadow: 15px 15px 30px #bebebe, -15px -15px 30px #ffffff;
 }
 .payments-items img {
   width: 300px;

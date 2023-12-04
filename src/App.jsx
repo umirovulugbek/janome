@@ -1,21 +1,18 @@
 /* eslint-disable react/no-unescaped-entities */
 import "./App.css";
-import { Swiper, SwiperSlide } from "swiper/react";
+
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
-import {
-  MDBFooter,
-  MDBContainer,
-  // MDBCol,
-  // MDBRow,
-  MDBIcon,
-} from "mdb-react-ui-kit";
+import "swiper/css/thumbs";
+import "swiper/css/free-mode";
+import { MDBFooter, MDBContainer } from "mdb-react-ui-kit";
 
-import { Autoplay, Navigation } from "swiper/modules";
 import { useState } from "react";
 import InputMask from "react-input-mask";
 import Fade from "react-reveal/Fade";
+import "react-image-gallery/styles/css/image-gallery.css";
+import ImageGallery from "react-image-gallery";
 import {
   Accordion,
   AccordionButton,
@@ -29,10 +26,7 @@ import {
   Link,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
   useToast,
 } from "@chakra-ui/react";
@@ -43,6 +37,7 @@ function App() {
   const [modal, setModal] = useState(false);
   const [obj, setObj] = useState({ number: "" });
   const [err, setErr] = useState({});
+
   const toast = useToast();
 
   const product = [
@@ -128,14 +123,14 @@ function App() {
     {
       name: "lorem",
       id: 3,
-      icon: "/img/star.png",
+      icon: "/img/unboxing.png",
       title: "Sifat ustunligi",
       desc: " lorem inpsum nimaladir nimaladir asdasd",
     },
     {
       name: "lorem",
       id: 4,
-      icon: "/img/delivery-truck.png",
+      icon: "/img/truck.png",
       title: "Yetkazib berish",
       desc: "O'zbekiston bo'ylab yetkazib berish.",
     },
@@ -147,6 +142,20 @@ function App() {
   const onClose = () => {
     setModal(false);
   };
+  const images = [
+    {
+      original: "/img/slide1.jpg",
+      thumbnail: "/img/slide1.jpg",
+    },
+    {
+      original: "/img/slide2.jpg",
+      thumbnail: "/img/slide2.jpg",
+    },
+    {
+      original: "/img/slide1.jpg",
+      thumbnail: "/img/slide1.jpg",
+    },
+  ];
 
   const Send = () => {
     let t = true,
@@ -216,40 +225,20 @@ function App() {
   return (
     <>
       <ChakraProvider>
-        <div className="container">
-          <div className="navbar my-3">
+        <div className="navbar py-3">
+          <div className="container">
             <img
-              style={{ width: 160, height: 42 }}
+              style={{ width: 145, margin: "0" }}
               src="/img/JANOME%20Logo.png"
               alt=""
             />
-            <button className="btn btn-outline-info">submit</button>
-          </div>
-
-          <Swiper
-            navigation={false}
-            modules={[Navigation, Autoplay]}
-            className="mySwiper"
-            loop={true}
-            speed={1300}
-            autoplay={{
-              delay: 4500,
-              pauseOnMouseEnter: true,
-              disableOnInteraction: false,
-            }}
-          >
-            <SwiperSlide>
-              <div className="swiper-slide">
-                <img src="/img/slide1.jpg" alt="" />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="swiper-slide">
-                <img src="/img/slide2.jpg" alt="" />
-              </div>
-            </SwiperSlide>
-          </Swiper>
-
+            <button className="btn btn-outline-info">
+              <Link to={"tel:+998910032202"}>+998 91 003 22 02</Link>
+            </button>
+          </div>{" "}
+        </div>
+        <div className="container mt-3">
+          <ImageGallery items={images} />
           <Fade top>
             <h2 className="seller-title">Mahsulotlarimiz</h2>
           </Fade>
@@ -258,7 +247,9 @@ function App() {
             {product.map((item, i) => {
               return (
                 <Fade key={i} bottom delay={i * 50}>
-                  <div className="card">
+                  <div className="card_box">
+                    <span></span>
+
                     <div className="card-img">
                       <img src={item?.img} alt="" />
                     </div>
@@ -266,23 +257,31 @@ function App() {
                       <div className="title">{item?.name}</div>
                       <div className="price">{item?.price} so'm</div>
                     </div>
-                    <button
-                      className="btn btn-success"
-                      style={{ cursor: "pointer" }}
-                      type="button"
-                      onClick={() => {
-                        handleModal(item);
-                      }}
-                    >
-                      Sotib olish
-                    </button>
+                    <div className="d-flex justify-content-center w-100">
+                      <button
+                        className="btn btn-success w-100"
+                        style={{
+                          cursor: "pointer",
+                          borderRadius: "20px",
+                          background: "black",
+                        }}
+                        type="button"
+                        onClick={() => {
+                          handleModal(item);
+                        }}
+                      >
+                        Sotib olish
+                      </button>
+                    </div>
                   </div>
                 </Fade>
               );
             })}
           </div>
         </div>
+
         <div className="mb-4 justify-content-between h-100 shop">
+          <h2>Xafta mahsuloti</h2>
           <div className="shop-items position-relative">
             <div className="container shop-item">
               <div className="shop_img">
@@ -299,8 +298,7 @@ function App() {
                 </button>
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Mauris eget hendrerit odio, non ultrices lorem. Donec vel
-                  vestibulum eros. Curabitur fringilla arcu varius.
+                  Mauris eget hendrerit odio,
                 </p>
               </div>
             </div>
@@ -308,11 +306,17 @@ function App() {
           </div>
         </div>
         <div className="container">
+          <h2 className="my-4 seller-title">Yetkazib berish</h2>
           <div className="delivery">
-            <img src="/img/delir.jpg" alt="" />
+            <div className="d-flex justify-content-center">
+              <img
+                src="/img/delir1.jpg"
+                alt=""
+                style={{ maxHeight: "550px", borderRadius: "16px" }}
+              />
+            </div>
             <div className="text-delivery">
-              <h2 className="my-4">Yetkazib berish</h2>
-              <p className="my-4">
+              <p className="my-4 text-center">
                 <b>EMU express</b> orqali Toshkent shahar ichida 24 soatda,
                 O'zbekiston bo'ylab 48 soat ichida uyingizga yetkazib beriladi.
               </p>
@@ -413,104 +417,101 @@ function App() {
           </div>
         </div>
         <div className="container">
-          <h1>To'lovlar</h1>
+          <h2 className="text-center">To'lovlar</h2>
           <div className="payments">
             <div className="payments-items">
-              <img src="/img/20041.jpg" alt="" />
+              <div className="p-4">
+                <div
+                  className="d-flex justify-content-center align-items-center"
+                  style={{ height: "100px" }}
+                >
+                  <img src="/img/uzum.png" alt="" />
+                </div>
+                <p className="text-center mt-2">
+                  Lorem ipsum dolor sit amet cons Lorem, ipsum dolor. ectet
+                  Lorem ipsum dolor sit.
+                </p>
+              </div>
             </div>
             <div className="payments-items">
-              <img src="/img/20041.jpg" alt="" />
+              <div className="p-4">
+                <div
+                  className="d-flex justify-content-center align-items-center "
+                  style={{ height: "100px" }}
+                >
+                  <img src="/img/zoopay.png" alt="" />
+                </div>
+                <p className="text-center mt-2">
+                  Lorem ipsum dolor sit amet cons Lorem, ipsum dolor. ectet
+                  Lorem ipsum dolor sit.
+                </p>
+              </div>
             </div>
             <div className="payments-items">
-              <img src="/img/20041.jpg" alt="" />
+              <div className="p-4">
+                <div
+                  className="d-flex justify-content-center align-items-center"
+                  style={{ height: "100px" }}
+                >
+                  <img src="/img/uzum.png" alt="" />
+                </div>
+                <p className="text-center mt-2">
+                  Lorem ipsum dolor sit amet cons Lorem, ipsum dolor. ectet
+                  Lorem ipsum dolor sit.
+                </p>
+              </div>
             </div>
           </div>
         </div>
         <MDBFooter className="bg-light text-center text-white">
-          <MDBContainer className="p-4 pb-0">
-            <section className="mb-4">
-              <Link
-                className="m-1"
-                style={{
-                  backgroundColor: "#3b5998",
-                  borderRadius: "8px",
-                  padding: "15px",
-                }}
-                to="/"
-                role="button"
-              >
-                <MDBIcon fab icon="facebook-f" />
-              </Link>
+          <MDBContainer className="p-4 pb-0 text-center">
+            <div className="d-flex flex-wrap justify-content-between">
+              <div className="d-flex  flex-wrap justify-content-center mb-2">
+                <Link to="/" className=" m-1 socialContainer containerOne">
+                  <svg className="socialSvg instagramSvg" viewBox="0 0 16 16">
+                    {" "}
+                    <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"></path>{" "}
+                  </svg>
+                </Link>
 
-              <Link
-                className="m-1"
-                style={{
-                  backgroundColor: "#55acee",
-                  borderRadius: "8px",
-                  padding: "15px",
-                }}
-                to=""
-                role="button"
-              >
-                <MDBIcon fab icon="twitter" />
-              </Link>
+                <Link to="/" className=" m-1 socialContainer containerTwo">
+                  <svg className="socialSvg twitterSvg" viewBox="0 0 16 16">
+                    {" "}
+                    <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"></path>{" "}
+                  </svg>{" "}
+                </Link>
 
-              <Link
-                className="m-1"
-                style={{
-                  backgroundColor: "#dd4b39",
-                  borderRadius: "8px",
-                  padding: "15px",
-                }}
-                to="/"
-              >
-                <MDBIcon fab icon="google" />
-              </Link>
-              <Link
-                className="m-1"
-                style={{
-                  backgroundColor: "#ac2bac",
-                  borderRadius: "8px",
-                  padding: "15px",
-                }}
-                to="#!"
-              >
-                <MDBIcon fab icon="instagram" />
-              </Link>
+                <Link to="/" className=" m-1 socialContainer containerThree">
+                  <svg className="socialSvg linkdinSvg" viewBox="0 0 448 512">
+                    <path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"></path>
+                  </svg>
+                </Link>
 
-              <Link
-                className="m-1"
-                style={{
-                  backgroundColor: "#0082ca",
-                  borderRadius: "8px",
-                  padding: "15px",
-                }}
-                to="/"
-              >
-                <MDBIcon fab icon="linkedin-in" />
-              </Link>
-
-              <Link
-                className="m-1"
-                style={{
-                  backgroundColor: "#333333",
-                  borderRadius: "8px",
-                  padding: "15px",
-                }}
-                to="/"
-              >
-                <MDBIcon fab icon="github" />
-              </Link>
-            </section>
-            <div>
-              <Link to="tel:+998936645664" style={{ color: "black" }}>
-                +99893 664 56 64
-              </Link>
+                <Link to="/" className=" m-1 socialContainer containerFour">
+                  <svg className="socialSvg whatsappSvg" viewBox="0 0 16 16">
+                    {" "}
+                    <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"></path>{" "}
+                  </svg>
+                </Link>
+              </div>
+              <div>
+                <div>
+                  <Link to="tel:+998936645664" style={{ color: "black" }}>
+                    +99893 664 56 64
+                  </Link>
+                </div>
+                <div>
+                  <Link to="tel:+998936645664" style={{ color: "black" }}>
+                    +99893 664 56 64
+                  </Link>
+                </div>
+              </div>
             </div>
-            <div>
-              <Link to="tel:+998936645664" style={{ color: "black" }}>
-                +99893 664 56 64
-              </Link>
+            <div
+              style={{ color: "black", textAlign: "start" }}
+              className="my-2"
+            >
+              Manzil: Toshkent shahri, Yakkasaroy tumani, Qushbegi koʻchasi 26
             </div>
           </MDBContainer>
 
@@ -518,10 +519,7 @@ function App() {
             className="text-center p-3"
             style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
           >
-            © 2020 Copyright:
-            <a className="text-white" href="https://mdbootstrap.com/">
-              MDBootstrap.com
-            </a>
+            © 2023 Copyright:
           </div>
         </MDBFooter>
         <div
@@ -560,67 +558,95 @@ function App() {
             </div>
           </div>
         </div>
-        <Modal isOpen={modal} onClose={onClose}>
+        <Modal isOpen={modal} onClose={onClose} size={"2xl"}>
           <ModalOverlay />
           <ModalContent>
-            <ModalCloseButton />
-            <ModalHeader></ModalHeader>
-            <ModalBody>
-              <div className="text-center">
-                <div className="d-flex justify-content-center">
-                  <img src={data.img} alt="" style={{ height: "300px" }} />
-                </div>
-                <div>
-                  <div className="mb-4" style={{ textAlign: "left" }}>
-                    <Input
-                      placeholder="Ismi:"
-                      onChange={handleChange}
-                      name="name"
-                      value={obj?.name}
-                    />
-                    {err?.name === true ? (
-                      <span style={{ color: "red" }}>
-                        {"ismingizni kiriting"}
-                      </span>
-                    ) : null}
-                  </div>
-                  <div className="mb-4" style={{ textAlign: "left" }}>
-                    <InputMask
-                      className="form-control"
-                      placeholder="Raqam kiriting:"
-                      formatChars={{ b: "[0-9]" }}
-                      mask="+998 (bb) bbb-bb-bb"
-                      maskChar="_"
-                      name="number"
-                      value={obj?.number}
-                      onChange={handleChange}
-                    />
-                    {err?.number === true ? (
-                      <span style={{ color: "red" }}>{"raqam kiriting"}</span>
-                    ) : null}
-                  </div>
-                  <div className="mb-4" style={{ textAlign: "left" }}>
-                    <Input
-                      placeholder="Hudud"
-                      onChange={handleChange}
-                      name="area"
-                      value={obj?.area}
-                    />
-                    {err?.area === true ? (
-                      <span style={{ color: "red" }}>{"huduni kiriting"}</span>
-                    ) : null}
-                  </div>
-                </div>
-                <div>{data?.name}</div>
-                <div>{data?.price} so'm</div>
+            {/* <ModalCloseButton /> */}
 
-                <input type="text" />
-                <button className="btn  btn-success" onClick={Send}>
-                  Sotib olish
-                </button>
+            <ModalBody>
+              <div className="text-center d-block  d-md-flex ">
+                <div
+                  className="d-flex justify-content-center w-md-50 w-100 "
+                  style={{ marginRight: "20px" }}
+                >
+                  <div>
+                    <img
+                      src={data.img}
+                      alt=""
+                      style={{ height: "300px" }}
+                      className="p-3"
+                    />
+                    <div>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      At, expedita.
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="mt-3  w-md-50 w-100 mt-md-0 pt-4"
+                  style={{
+                    background: "#e7e7e7",
+                    padding: "10px",
+                    borderLeft: "2px solid #919191",
+                  }}
+                >
+                  <div>
+                    <div className="mb-4" style={{ textAlign: "left" }}>
+                      <label htmlFor="">ism kiriting</label>
+                      <Input
+                        placeholder="Ismi:"
+                        onChange={handleChange}
+                        name="name"
+                        value={obj?.name}
+                        style={{ background: "white" }}
+                      />
+                      {err?.name === true ? (
+                        <span style={{ color: "red" }}>
+                          {"ismingizni kiriting"}
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className="mb-4" style={{ textAlign: "left" }}>
+                      <label htmlFor="">Telefon raqam kiriting</label>
+                      <InputMask
+                        className="form-control"
+                        placeholder="Raqam kiriting:"
+                        formatChars={{ b: "[0-9]" }}
+                        mask="+998 (bb) bbb-bb-bb"
+                        maskChar="_"
+                        name="number"
+                        value={obj?.number}
+                        onChange={handleChange}
+                      />
+                      {err?.number === true ? (
+                        <span style={{ color: "red" }}>{"raqam kiriting"}</span>
+                      ) : null}
+                    </div>
+                    <div className="mb-4" style={{ textAlign: "left" }}>
+                      <label htmlFor="">Hudud kiriting</label>
+                      <Input
+                        placeholder="Hudud"
+                        onChange={handleChange}
+                        name="area"
+                        style={{ background: "white" }}
+                        value={obj?.area}
+                      />
+                      {err?.area === true ? (
+                        <span style={{ color: "red" }}>
+                          {"huduni kiriting"}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div>{data?.name}</div>
+                  <div>{data?.price} so'm</div>
+
+                  <button className="btn  btn-success" onClick={Send}>
+                    Sotib olish
+                  </button>
+                </div>
               </div>
             </ModalBody>
-            <ModalFooter></ModalFooter>
           </ModalContent>
         </Modal>
       </ChakraProvider>
